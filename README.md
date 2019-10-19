@@ -4,10 +4,17 @@
 #### Setup ([reference](https://github.com/sudar/Arduino-Makefile))
 
 On the raspberry pi:
-1. `pip install pyserial`
-2. `cd ~/Documents`
-3. `git clone https://github.com/sudar/Arduino-Makefile.git`
+1. `sudo apt install arduino`
+2. `pip install pyserial`
+3. `cd ~/Documents`
+4. `git clone https://github.com/sudar/Arduino-Makefile.git`
+5. `cd /usr/share/arduino/libraries`
+6. `sudo git clone https://github.com/adafruit/Adafruit_Motor_Shield_V2_Library.git`
 
+#### Usage
+To upload code:
+1. `cd ~/Documents/POE-Portal-Turret/src/turret_base`
+2. `make upload` (Note: to just compile code, you can also just use `make`)
 
 
 ### Raspi Notes
