@@ -21,3 +21,5 @@ class SerialConnection:
         self.arduino.write('c') # Tell arduino new cmd is coming
         self.arduino.write(str(int(cmd.f_vel)))
         self.arduino.write(str(int(cmd.a_vel)))
+        self.arduino.write(str(int(cmd.r_turret)))
+        self.arduino.write(str(int(cmd.l_turret)))

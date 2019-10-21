@@ -14,6 +14,8 @@ void loop() {
     if (Serial.read() == 'c') { // c will be sent for a new cmd
       cmd.f_vel = Serial.read();
       cmd.a_vel = Serial.read();
+      cmd.r_shooter = Serial.read();
+      cmd.l_shooter = Serial.read();
       d.run(cmd);
     } else {
       return;

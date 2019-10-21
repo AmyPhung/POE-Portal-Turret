@@ -21,7 +21,7 @@ To upload code:
 + Currently using the Raspberry Pi Model B+ V1.2
 + password is portal2rocks
 + connected to olin-devices
-+ `ssh -Y pi@pi-bot-amy.local`
++ `ssh -X pi@pi-bot-amy.local`
 + To shutdown, `sudo shutdown -h now`
 
 ### Raspi Camera notes
@@ -31,3 +31,9 @@ To upload code:
 ### References
 + [Accessing PI Camera](https://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/)
 + [Using an LCD screen w/ Raspi](https://www.youtube.com/watch?v=cVdSc8VYVBM)
+
+### Other Notes
++ Moved away from using keyboard since it requires sudo, which caused strange permission errors. Here are some references that helped me make progress, but overall it wasn't worth it in the end. New iteration uses tkinter keypresses and buttons as a fallback option
++ [SU error]( https://unix.stackexchange.com/questions/110558/su-with-error-x11-connection-rejected-because-of-wrong-authentication)
++ Need to run with sudo
++ Sending keypresses over SSH https://askubuntu.com/questions/358934/sending-keypresses-to-remote-x-session-over-ssh

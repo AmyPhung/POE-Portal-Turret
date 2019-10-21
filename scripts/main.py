@@ -15,14 +15,13 @@ while True:
 """
 
 from modules.guilib import GUIWindow
-from modules.datalib import TurretCommand
 from modules.statelib import StateController
 from modules.seriallib import SerialConnection
 
 if __name__ == "__main__":
     gui = GUIWindow()
     state_ctrl = StateController()
-    arduino = SerialConnection(port='/dev/ttyACM0', baud=115200)
+    # arduino = SerialConnection(port='/dev/ttyACM0', baud=115200)
 
     while True:
         gui.update()
@@ -30,8 +29,8 @@ if __name__ == "__main__":
         # print(state_ctrl.cmd)
 
         if state_ctrl.cmd != None:
-            print(state_ctrl.cmd)
-            arduino.publish(state_ctrl.cmd)
+            print state_ctrl.cmd
+            # arduino.publish(state_ctrl.cmd)
 
         # print(gui.isEStopped)
         # print(gui.current_state)

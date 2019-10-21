@@ -1,12 +1,12 @@
 import behaviorlib
-from datalib import TurretCommand
+from datalib import RobotCommand
 
 class StateController:
     def __init__(self):
         self.state = 0
         self.cmd = None
 
-        self._prev_cmd = TurretCommand()
+        self._prev_cmd = RobotCommand()
 
     def update(self, isEStopped, current_state):
         if isEStopped:
@@ -17,8 +17,18 @@ class StateController:
         if self.state == 0:
             self.cmd = behaviorlib.computeEstopCommand()
         elif self.state == 1:
-            self.cmd = behaviorlib.computeTeleopCommand()
+            self.cmd = behaviorlib.computeForwardCommand()
         elif self.state == 2:
+            self.cmd = behaviorlib.computeBackwardCommand()
+        elif self.state == 3:
+            self.cmd = behaviorlib.computeLeftCommand()
+        elif self.state == 4:
+            self.cmd = behaviorlib.computeRightCommand()
+        elif self.state == 5:
+            self.cmd = behaviorlib.computeShootCommand()
+        elif self.state == 10:
+            self.cmd = behaviorlib.computeState1Command()
+        elif self.state == 11:
             self.cmd = behaviorlib.computeState2Command()
 
         if self.cmd == None:
