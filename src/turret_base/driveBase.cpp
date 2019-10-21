@@ -5,7 +5,13 @@ DiffDriveBase::DiffDriveBase(){
   shield.begin();
 }
 
-void DiffDriveBase::run(moveCmd cmd){
+void DiffDriveBase::run(robotCmd cmd){
+  // Set limits on command inputs
+  if (cmd.f_vel > 100) cmd.f_vel = 100;
+  if (cmd.f_vel < -100) cmd.f_vel = -100;
+  if (cmd.a_vel > 100) cmd.a_vel = 100;
+  if (cmd.a_vel < -100) cmd.a_vel = 100;
+
   int forward = map(cmd.f_vel, -100, 100, -127, 127);
   int turn = map(cmd.a_vel, -100, 100, -127, 127);    // Left is positive, RH rule
 

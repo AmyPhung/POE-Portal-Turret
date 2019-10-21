@@ -1,7 +1,7 @@
 #include "turret_base.h"
 
 DiffDriveBase d;
-moveCmd cmd;
+robotCmd cmd;
 
 void setup() {
   // put your setup code here, to run once:
@@ -9,10 +9,16 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  cmd.f_vel = 1;
-  cmd.a_vel = 1;
-  d.run(cmd);
+  // If new command has been recieved
+  if (Serial.available() > 0) {
+    if (Serial.read() == 'c') { // c will be sent for a new cmd
+      cmd.f_vel = Serial.read();
+      cmd.a_vel = Serial.read();
+      d.run(cmd);
+    } else {
+      return;
+    }
+  }
 }
 
 

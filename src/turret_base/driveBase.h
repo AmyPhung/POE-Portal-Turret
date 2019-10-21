@@ -9,7 +9,7 @@
 class DiffDriveBase{
 public:
   DiffDriveBase();
-  void run(moveCmd cmd);
+  void run(robotCmd cmd);
 
 private:
   Adafruit_MotorShield shield = Adafruit_MotorShield();

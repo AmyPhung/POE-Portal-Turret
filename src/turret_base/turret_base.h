@@ -5,7 +5,4 @@
 #include "driveBase.h"
 #include <Arduino.h>
 
-// Drive Constants
-
-
 #endif
