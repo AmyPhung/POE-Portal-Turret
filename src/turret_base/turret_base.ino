@@ -14,25 +14,74 @@ void setup() {
 }
 
 void loop() {
-//  delay(1000);
-//  // If new command has been recieved
-  cmd.f_vel = 0;//Serial.read();
-  cmd.a_vel = 0;//Serial.read();
-  cmd.r_shooter = 0;//Serial.read();
-  cmd.l_shooter = 0;//Serial.read();
-  d.run(cmd);
-//  if (Serial.available() > 0) {
-//    if (Serial.read() == 'c') { // c will be sent for a new cmd
-//      cmd.f_vel = Serial.read();
-//      cmd.a_vel = Serial.read();
-//      cmd.r_shooter = Serial.read();
-//      cmd.l_shooter = Serial.read();
-//      d.run(cmd);
-//    } else {
-//      return;
-//    }
-//  }
+  // If new command has been recieved
+  if (Serial.available() > 0) {
+    if (Serial.read() == 'c') { // c will be sent for a new cmd
+      cmd = readSerial();
+      d.run(cmd);
+    } else {
+      return;
+    }
+  }
 }
+
+robotCmd readSerial() {
+  robotCmd cmd_out;
+
+  while (Serial.available() <= 0) { delay(1);}
+  char data = Serial.read();
+  if (data == '\r') {
+    Serial.println("ahshafs");
+  }
+  Serial.println(data);
+  if (data == 'f') {
+    while (true) {
+      while (Serial.available() <= 0) { delay(1);}
+      data = Serial.read();
+      if (data == 'a') {
+        break;
+      }
+      cmd_out.f_vel_str += data;
+    }
+    while (true) {
+      while (Serial.available() <= 0) { delay(1);}
+      data = Serial.read();
+      if (data == 'r') {
+        break;
+      }
+      cmd_out.a_vel_str += data;
+    }
+    while (true) {
+      while (Serial.available() <= 0) { delay(1);}
+      data = Serial.read();
+      if (data == 'l') {
+        break;
+      }
+      cmd_out.r_shooter_str += data;
+    }
+    while (true) {
+      while (Serial.available() <= 0) { delay(1);}
+      data = Serial.read();
+      if (data == 'e') {
+        break;
+      }
+      cmd_out.l_shooter_str += data;
+    }
+  }
+
+  cmd_out.f_vel = cmd_out.f_vel_str.toInt();
+  cmd_out.a_vel = cmd_out.a_vel_str.toInt();
+  cmd_out.r_shooter = cmd_out.r_shooter_str.toInt();
+  cmd_out.l_shooter = cmd_out.l_shooter_str.toInt();
+
+  Serial.println(cmd_out.f_vel);
+  Serial.println(cmd_out.a_vel);
+  Serial.println(cmd_out.r_shooter);
+  Serial.println(cmd_out.r_shooter);
+  return cmd_out;
+}
+
+
 
 
 /*

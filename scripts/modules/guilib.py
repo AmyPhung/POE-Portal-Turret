@@ -16,7 +16,7 @@ Each state has an update function that modifies it's current command
 In main
 
 """
-import tkinter as tk
+import Tkinter as tk
 
 class GUIWindow:
     def __init__(self):

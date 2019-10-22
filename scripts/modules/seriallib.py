@@ -19,7 +19,12 @@ class SerialConnection:
 
     def publish(self, cmd):
         self.arduino.write('c') # Tell arduino new cmd is coming
+        self.arduino.write('f')
         self.arduino.write(str(int(cmd.f_vel)))
+        self.arduino.write('a')
         self.arduino.write(str(int(cmd.a_vel)))
+        self.arduino.write('r')
         self.arduino.write(str(int(cmd.r_turret)))
+        self.arduino.write('l')
         self.arduino.write(str(int(cmd.l_turret)))
+        self.arduino.write('e') # Tell arduino end of cmd
