@@ -1,4 +1,6 @@
-#include "turret_base.h"
+//#include "turret_base.h"
+#include "driveBase.h"
+#include <Arduino.h>
 
 DiffDriveBase d;
 robotCmd cmd;
@@ -6,21 +8,30 @@ robotCmd cmd;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
+  d.setup();
+  Serial.println("setup");
+  
 }
 
 void loop() {
-  // If new command has been recieved
-  if (Serial.available() > 0) {
-    if (Serial.read() == 'c') { // c will be sent for a new cmd
-      cmd.f_vel = Serial.read();
-      cmd.a_vel = Serial.read();
-      cmd.r_shooter = Serial.read();
-      cmd.l_shooter = Serial.read();
-      d.run(cmd);
-    } else {
-      return;
-    }
-  }
+//  delay(1000);
+//  // If new command has been recieved
+  cmd.f_vel = 0;//Serial.read();
+  cmd.a_vel = 0;//Serial.read();
+  cmd.r_shooter = 0;//Serial.read();
+  cmd.l_shooter = 0;//Serial.read();
+  d.run(cmd);
+//  if (Serial.available() > 0) {
+//    if (Serial.read() == 'c') { // c will be sent for a new cmd
+//      cmd.f_vel = Serial.read();
+//      cmd.a_vel = Serial.read();
+//      cmd.r_shooter = Serial.read();
+//      cmd.l_shooter = Serial.read();
+//      d.run(cmd);
+//    } else {
+//      return;
+//    }
+//  }
 }
 
 

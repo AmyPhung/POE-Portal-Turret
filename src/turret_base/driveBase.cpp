@@ -2,6 +2,10 @@
 
 
 DiffDriveBase::DiffDriveBase(){
+  
+}
+
+void DiffDriveBase::setup(){
   shield.begin();
 }
 
@@ -26,21 +30,21 @@ void DiffDriveBase::run(robotCmd cmd){
 
   if (Rspeed < 0) {
     RMotor->setSpeed(-Rspeed);
-    RMotor->run(BACKWARD);  // Backwards
+    RMotor->run(FORWARD);  // Wheel is backwards
   } else {
     RMotor->setSpeed(Rspeed);
-    RMotor->run(FORWARD);  // Forward
+    RMotor->run(BACKWARD);  // Actually Forward
   }
   if (Lspeed < 0) {
     LMotor->setSpeed(-Lspeed);
-    LMotor->run(BACKWARD);  // Backwards
+    LMotor->run(FORWARD);  // Wheel is backwards
   } else {
     LMotor->setSpeed(Lspeed);
-    LMotor->run(BACKWARD);  // Forward
+    LMotor->run(BACKWARD);  // Actually Forwards
   }
 
   LShooter->setSpeed(l_shoot_speed);
-  LShooter->run(FORWARD);
+  LShooter->run(BACKWARD); // Actually Forwards
   RShooter->setSpeed(r_shoot_speed);
   RShooter->run(FORWARD);
 }
