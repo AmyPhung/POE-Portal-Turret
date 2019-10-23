@@ -20,12 +20,12 @@ def computeBackwardCommand():
 def computeLeftCommand():
     cmd = RobotCommand()
     cmd.f_vel = 0
-    cmd.a_vel = 20
+    cmd.a_vel = 40
     return cmd
 def computeRightCommand():
     cmd = RobotCommand()
     cmd.f_vel = 0
-    cmd.a_vel = -20
+    cmd.a_vel = -40
     return cmd
 def computeShootCommand():
     cmd = RobotCommand()
