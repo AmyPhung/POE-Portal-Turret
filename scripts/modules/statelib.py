@@ -8,7 +8,7 @@ class StateController:
 
         self._prev_cmd = RobotCommand()
 
-    def update(self, isEStopped, current_state):
+    def update(self, isEStopped, current_state, target=None):
         if isEStopped:
             self.state = 0
         else:
@@ -27,7 +27,7 @@ class StateController:
         elif self.state == 5:
             self.cmd = behaviorlib.computeShootCommand()
         elif self.state == 10:
-            self.cmd = behaviorlib.computeState1Command()
+            self.cmd = behaviorlib.computeState1Command(target)
         elif self.state == 11:
             self.cmd = behaviorlib.computeState2Command()
 

@@ -34,8 +34,11 @@ def computeShootCommand():
     return cmd
 
 # High level behaviors
-def computeState1Command():
-    return None
+def computeState1Command(target):
+    cmd = RobotCommand()
+    cmd.f_vel = 40
+    cmd.a_vel = target[0]
+    return cmd
 
 def computeState2Command():
     return None
