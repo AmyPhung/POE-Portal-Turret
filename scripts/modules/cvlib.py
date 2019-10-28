@@ -1,37 +1,24 @@
 import numpy as np
 import cv2
 
-T11 = 0
-T12 = 48
-T13 = 42
-T21 = 46
-T22 = 187
-T23 = 198
-
+T11 = 147
+T12 = 26
+T13 = 120
+T21 = 213
+T22 = 186
+T23 = 255
 
 class TrackingSystem:
-    def __init__(self, gui=True, pi=False):
-        self._pi = pi
-        if pi:
-            from picamera.array import PiRGBArray
-            from picamera import PiCamera
-            import time
-
-            camera = PiCamera()
-            camera.resolution = (640, 480)
-            camera.framerate = 32
-            rawCapture = PiRGBArray(camera, size=(640, 480))
-
-            # allow the camera to warmup
-            time.sleep(0.1)
-
-        else:
-            self.cap = cv2.VideoCapture(0)
+    def __init__(self, gui=True):
+        self.cap = cv2.VideoCapture(0)
+        self.cap.set(3, 640/100) # Turn down resolution
+        self.cap.set(4, 480/100)
 
         self._gui = gui
         if gui:
             self._win_name = "Visual"
-            cv2.namedWindow(self._win_name)
+            cv2.namedWindow(self._win_name, cv2.WINDOW_NORMAL)
+            cv2.resizeWindow(self._win_name,600,600)
             cv2.createTrackbar('t1-1', self._win_name, T11, 255, nothing)
             cv2.createTrackbar('t1-2', self._win_name, T12, 255, nothing)
             cv2.createTrackbar('t1-3', self._win_name, T13, 255, nothing)
@@ -43,12 +30,8 @@ class TrackingSystem:
         # TODO: Have saveable files
 
     def update(self):
-        if self._pi:
-            camera.capture(rawCapture, format="bgr")
-            frame = rawCapture.array
-        else:
-            # Capture frame-by-frame
-            ret, frame = self.cap.read()
+        # Capture frame-by-frame
+        ret, frame = self.cap.read()
 
         ## convert to hsv
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)

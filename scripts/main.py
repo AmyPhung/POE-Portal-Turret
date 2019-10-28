@@ -30,7 +30,7 @@ if __name__ == "__main__":
     except:
         arduino_avail = False
         print "No Arduino Found. Running GUI only"
-    cv = TrackingSystem(gui=True, pi=False)
+    cv = TrackingSystem(gui=True)
 
     while True:
         gui.update()
