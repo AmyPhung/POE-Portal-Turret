@@ -1,9 +1,9 @@
 import numpy as np
 import cv2
 
-T11 = 147
-T12 = 26
-T13 = 120
+T11 = 149
+T12 = 32
+T13 = 196
 T21 = 213
 T22 = 186
 T23 = 255
@@ -11,8 +11,8 @@ T23 = 255
 class TrackingSystem:
     def __init__(self, gui=True):
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(3, 640/100) # Turn down resolution
-        self.cap.set(4, 480/100)
+        self.cap.set(3, 640/30) # Turn down resolution
+        self.cap.set(4, 480/30)
 
         self._gui = gui
         if gui:
