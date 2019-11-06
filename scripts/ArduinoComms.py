@@ -11,10 +11,12 @@ class ArduinoComms:
 
         self.twist_cmd = Twist()
         self.shooter_cmd = Shooter()
+        self.feed_cmd = Int32()
 
         rospy.init_node("ArduinoComms")
         self.twist_sub = rospy.Subscriber("/cmd_vel", Twist, self.twistCB)
         self.shooter_sub = rospy.Subscriber("/cmd_shoot", Shooter, self.shooterCB)
+        self.feed_sub = rospy.Subscriber("/cmd_feed", Int32, self.feedCB)
         self.update_rate = rospy.Rate(10)
 
     def twistCB(self, msg):
@@ -23,6 +25,10 @@ class ArduinoComms:
 
     def shooterCB(self, msg):
         self.shooter_cmd = msg
+        self.sendCmds()
+
+    def feedCB(self, msg):
+        self.feed_cmd = msg
         self.sendCmds()
 
     def sendCmds(self):
@@ -34,7 +40,9 @@ class ArduinoComms:
         self.connection.write('r')
         self.connection.write(str(int(self.shooter_cmd.r_cmd)))
         self.connection.write('l')
-        self.connection.write(str(int(self.shooter_cmd.r_cmd)))
+        self.connection.write(str(int(self.shooter_cmd.l_cmd)))
+        self.connection.write('d')
+        self.connection.write(str(int(self.feed_cmd.data)))
         self.connection.write('e') # Tell arduino end of cmd
 
     def run(self):

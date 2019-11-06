@@ -4,6 +4,7 @@
 #include "msgs.h"
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
+#include <Servo.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
 class DiffDriveBase{
@@ -18,6 +19,7 @@ private:
   Adafruit_DCMotor *RMotor = shield.getMotor(1);
   Adafruit_DCMotor *LShooter = shield.getMotor(3);
   Adafruit_DCMotor *RShooter = shield.getMotor(4);
+  Servo feedServo;
 };
 
 #endif

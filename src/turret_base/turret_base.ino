@@ -26,10 +26,7 @@ robotCmd readSerial() {
 
   while (Serial.available() <= 0) { delay(1);}
   char data = Serial.read();
-  // if (data == '\r') {
-  //   // Serial.println("ahshafs");
-  // }
-  // Serial.println(data);
+
   if (data == 'f') {
     while (true) {
       while (Serial.available() <= 0) { delay(1);}
@@ -58,10 +55,18 @@ robotCmd readSerial() {
     while (true) {
       while (Serial.available() <= 0) { delay(1);}
       data = Serial.read();
-      if (data == 'e') {
+      if (data == 'd') {
         break;
       }
       cmd_out.l_shooter_str += data;
+    }
+    while (true) {
+      while (Serial.available() <= 0) { delay(1);}
+      data = Serial.read();
+      if (data == 'e') {
+        break;
+      }
+      cmd_out.feed_str += data;
     }
   }
 
@@ -69,11 +74,13 @@ robotCmd readSerial() {
   cmd_out.a_vel = cmd_out.a_vel_str.toInt();
   cmd_out.r_shooter = cmd_out.r_shooter_str.toInt();
   cmd_out.l_shooter = cmd_out.l_shooter_str.toInt();
+  cmd_out.feed = cmd_out.feed_str.toInt();
 
   Serial.println(cmd_out.f_vel);
   Serial.println(cmd_out.a_vel);
   Serial.println(cmd_out.r_shooter);
   Serial.println(cmd_out.r_shooter);
+  Serial.println(cmd_out.feed);
   return cmd_out;
 }
 
@@ -81,13 +88,6 @@ robotCmd readSerial() {
 
 
 /*
-
-Command (twist-like message)
-create a struct for this
-
-get commands via something (serial for now )
-
-WASD from laptop (higher-level behavior)
 
 TODO: Add in ramping to prevent over current draw
 TODO: Rewrite firmware to use new boards

@@ -2,11 +2,12 @@
 
 
 DiffDriveBase::DiffDriveBase(){
-  
+
 }
 
 void DiffDriveBase::setup(){
   shield.begin();
+  feedServo.attach(10);
 }
 
 void DiffDriveBase::run(robotCmd cmd){
@@ -19,11 +20,14 @@ void DiffDriveBase::run(robotCmd cmd){
   if (cmd.l_shooter < 0) cmd.l_shooter = 0;
   if (cmd.r_shooter > 100) cmd.r_shooter = 100;
   if (cmd.r_shooter < 0) cmd.r_shooter = 0;
+  if (cmd.feed > 100) cmd.feed = 100;
+  if (cmd.feed < -100) cmd.feed = -100;
 
   int forward = map(cmd.f_vel, -100, 100, -127, 127);
   int turn = map(cmd.a_vel, -100, 100, -127, 127);    // Left is positive, RH rule
   int l_shoot_speed = map(cmd.l_shooter, 0, 100, 0, 255);
   int r_shoot_speed = map(cmd.r_shooter, 0, 100, 0, 255);
+  int feed = map(cmd.feed, -100, 100, 0, 168);
 
   int Rspeed = forward + turn; // Speed goes from 0 to 255
   int Lspeed = forward - turn;
@@ -47,4 +51,6 @@ void DiffDriveBase::run(robotCmd cmd){
   LShooter->run(BACKWARD); // Actually Forwards
   RShooter->setSpeed(r_shoot_speed);
   RShooter->run(FORWARD);
+
+  feedServo.write(feed);
 }

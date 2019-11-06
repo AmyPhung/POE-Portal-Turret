@@ -18,10 +18,12 @@ class StateController:
         self.estop_sub = rospy.Subscriber("/estop", Bool, self.estopCB)
         self.twist_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         self.shooter_pub = rospy.Publisher("/cmd_shoot", Shooter, queue_size=1)
+        self.feed_pub = rospy.Publisher("/cmd_feed", Int32, queue_size=1)
         self.update_rate = rospy.Rate(10)
 
         self._prev_twist_cmd = Twist()
         self._prev_shooter_cmd = Shooter()
+        self._prev_feed_cmd = Int32()
 
     def stateCB(self, msg):
         self.state = msg.data
@@ -32,23 +34,27 @@ class StateController:
     def run(self):
         while not rospy.is_shutdown():
             if self.state == 0 or self.estop:
-                twist_cmd, shooter_cmd = behaviorlib.computeEstopCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeEstopCommand()
             elif self.state == 1:
-                twist_cmd, shooter_cmd = behaviorlib.computeForwardCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeForwardCommand()
             elif self.state == 2:
-                twist_cmd, shooter_cmd = behaviorlib.computeBackwardCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeBackwardCommand()
             elif self.state == 3:
-                twist_cmd, shooter_cmd = behaviorlib.computeLeftCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeLeftCommand()
             elif self.state == 4:
-                twist_cmd, shooter_cmd = behaviorlib.computeRightCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeRightCommand()
             elif self.state == 5:
-                twist_cmd, shooter_cmd = behaviorlib.computeShootOnCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeShootOnCommand()
             elif self.state == 6:
-                twist_cmd, shooter_cmd = behaviorlib.computeShootOffCommand()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeShootOffCommand()
+            elif self.state == 7:
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeFeedOnCommand()
+            elif self.state == 8:
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeFeedOffCommand()
             elif self.state == 10:
-                twist_cmd, shooter_cmd = behaviorlib.computeState1Command()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState1Command()
             elif self.state == 11:
-                twist_cmd, shooter_cmd = behaviorlib.computeState2Command()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState2Command()
 
             # Don't send invalid or duplicate command
             if twist_cmd != None and \
@@ -59,6 +65,10 @@ class StateController:
                shooterIsUnique(shooter_cmd, self._prev_shooter_cmd):
                self.shooter_pub.publish(shooter_cmd)
                self._prev_shooter_cmd = shooter_cmd
+            if feed_cmd != None and \
+               feedIsUnique(feed_cmd, self._prev_feed_cmd):
+               self.feed_pub.publish(feed_cmd)
+               self._prev_feed_cmd = feed
 
             self.update_rate.sleep()
 
@@ -75,10 +85,17 @@ def twistIsUnique(twist1, twist2):
 
 def shooterIsUnique(shooter1, shooter2):
     if shooter1.r_cmd == shooter2.r_cmd and \
-       shooter1.l_cmd == shooter2.l_cmd:
+       shooter1.l_cmd == shooter2.l_cmd and \
+       shooter1.feed == shooter2.feed:
        return False
     else:
        return True
+
+def feedIsUnique(feed1, feed2):
+    if feed1.data == feed2.data:
+        return False
+    else:
+        return True
 
 
 if __name__ == "__main__":

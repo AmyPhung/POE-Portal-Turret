@@ -76,15 +76,25 @@ class GUIWindow:
         self.button_stop.grid(row=1,column=1)
         self.root.bind('q', self.stopCB)
 
-        self.button_shooter = tk.Button(self.root, width=15,
+        self.button_shooterOn = tk.Button(self.root, width=15,
                 text="Shooter On",
                 command = self.shootOnCB)
-        self.button_shooter.pack()
+        self.button_shooterOn.pack()
 
-        self.button_shooter = tk.Button(self.root, width=15,
+        self.button_shooterOff = tk.Button(self.root, width=15,
                 text="Shooter Off",
                 command = self.shootOffCB)
-        self.button_shooter.pack()
+        self.button_shooterOff.pack()
+
+        self.button_feedOn = tk.Button(self.root, width=15,
+                text="Feed On",
+                command = self.feedOnCB)
+        self.button_feedOn.pack()
+
+        self.button_feedOff = tk.Button(self.root, width=15,
+                text="Shooter Off",
+                command = self.feedOffCB)
+        self.button_feedOff.pack()
 
         # State 1
         self.button_state1 = tk.Button(self.root, width=30,
@@ -143,6 +153,14 @@ class GUIWindow:
     def shootOffCB(self, event=None):
         self.label_output2.configure(text = "Mode: teleop - shoot off")
         self.current_state = 6
+
+    def feedOnCB(self, event=None):
+        self.label_output2.configure(text = "Mode: teleop - feed on")
+        self.current_state = 7
+
+    def feedOffCB(self, event=None):
+        self.label_output2.configure(text = "Mode: teleop - feed off")
+        self.current_state = 8
 
     # Note: Reserving 6-9 for other low-level behaviors
 
