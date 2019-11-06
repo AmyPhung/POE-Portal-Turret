@@ -3,6 +3,30 @@
 ### Uploading code via SSH
 #### Setup ([reference](https://github.com/sudar/Arduino-Makefile))
 
+On the Euclid:
+1. cd /intel/euclid/euclid_ws/src
+2. git clone https://github.com/AmyPhung/portal_turret.git
+3. cd /intel/euclid/euclid_ws
+4. catkin_make
+
+
+1. `sudo apt install arduino`
+2. `pip install pyserial`
+3. `cd ~/Documents`
+4. `git clone https://github.com/sudar/Arduino-Makefile.git`
+5. `cd /usr/share/arduino/libraries`
+6. `sudo git clone https://github.com/adafruit/Adafruit_Motor_Shield_V2_Library.git`
+
+cd /intel/euclid/euclid_ws/src/portal_turret/src/turret_base
+
+
+
+export ROS_MASTER_URI=http://10.42.0.1:11311
+export ROS_IP=10.42.0.219
+Ip address is ifconfig on your computer 10.42.0.219
+
+rosrun portal_turret GuiWindow.py
+
 On the raspberry pi:
 1. `sudo apt install arduino`
 2. `pip install pyserial`
@@ -39,7 +63,7 @@ To upload code:
 + Sending keypresses over SSH https://askubuntu.com/questions/358934/sending-keypresses-to-remote-x-session-over-ssh
 
 
-### Misc notes to be sorted through 
+### Misc notes to be sorted through
 
 ssid=hotspot
 #ssid=OLIN-DEVICES

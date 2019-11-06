@@ -3,6 +3,10 @@
 
 // Libraries
 #include "driveBase.h"
+#include "msgs.h"
 #include <Arduino.h>
 
+DiffDriveBase d;
+robotCmd cmd;
+robotCmd readSerial();
 #endif

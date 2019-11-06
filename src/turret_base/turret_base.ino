@@ -1,9 +1,5 @@
-//#include "turret_base.h"
-#include "driveBase.h"
+#include "turret_base.h"
 #include <Arduino.h>
-
-DiffDriveBase d;
-robotCmd cmd;
 
 void setup() {
   // put your setup code here, to run once:
@@ -30,10 +26,10 @@ robotCmd readSerial() {
 
   while (Serial.available() <= 0) { delay(1);}
   char data = Serial.read();
-  if (data == '\r') {
-    Serial.println("ahshafs");
-  }
-  Serial.println(data);
+  // if (data == '\r') {
+  //   // Serial.println("ahshafs");
+  // }
+  // Serial.println(data);
   if (data == 'f') {
     while (true) {
       while (Serial.available() <= 0) { delay(1);}
