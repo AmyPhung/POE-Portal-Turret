@@ -69,7 +69,7 @@ class StateController:
             if feed_cmd != None and \
                feedIsUnique(feed_cmd, self._prev_feed_cmd):
                self.feed_pub.publish(feed_cmd)
-               self._prev_feed_cmd = feed
+               self._prev_feed_cmd = feed_cmd
 
             self.update_rate.sleep()
 
@@ -86,8 +86,7 @@ def twistIsUnique(twist1, twist2):
 
 def shooterIsUnique(shooter1, shooter2):
     if shooter1.r_cmd == shooter2.r_cmd and \
-       shooter1.l_cmd == shooter2.l_cmd and \
-       shooter1.feed == shooter2.feed:
+       shooter1.l_cmd == shooter2.l_cmd:
        return False
     else:
        return True

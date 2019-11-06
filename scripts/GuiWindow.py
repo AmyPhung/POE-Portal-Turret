@@ -92,7 +92,7 @@ class GUIWindow:
         self.button_feedOn.pack()
 
         self.button_feedOff = tk.Button(self.root, width=15,
-                text="Shooter Off",
+                text="Feed Off",
                 command = self.feedOffCB)
         self.button_feedOff.pack()
 
