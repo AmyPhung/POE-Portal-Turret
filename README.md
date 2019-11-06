@@ -37,3 +37,49 @@ To upload code:
 + [SU error]( https://unix.stackexchange.com/questions/110558/su-with-error-x11-connection-rejected-because-of-wrong-authentication)
 + Need to run with sudo
 + Sending keypresses over SSH https://askubuntu.com/questions/358934/sending-keypresses-to-remote-x-session-over-ssh
+
+
+### Misc notes to be sorted through 
+
+ssid=hotspot
+#ssid=OLIN-DEVICES
+#ROS_MASTER_URI:http://10.0.2.15:11311
+ROS_MASTER_URI:http://10.42.0.1:11311
+ConnectivityMonitor=55516
+LEDServer=38298
+SoundServer=43922
+
+After connecting (shouldn't need this):
+sudo service oobe-init restart-oobe
+
+
+settings.ini File:
+
+ssid=hotspot
+ROSMasterURI=http://10.42.0.1:11311
+ConnectivityMonitor=55516
+LEDServer=38298
+SoundServer=43922
+
+
+On laptop:
+export ROS_MASTER_URI=http://10.42.0.1:11311
+export ROS_IP=http://10.42.0.1:11311
+
+/camera/color/image_raw/compressed
+/camera/fisheye/image_raw/compressed
+/camera/imu_raw
+/camera/ir2/image_raw/compressed
+/camera/ir/image_raw/compressed
+/camera/depth/points
+/camera/depth/image_raw
+
+
+
+/camera/color/image_raw/compressed /camera/fisheye/image_raw/compressed /camera/imu_raw /camera/ir2/image_raw/compressed /camera/ir/image_raw/compressed /camera/depth/points /camera/depth/image_raw
+
+
+Notes:
+Why new sensors?
+Why ROS?
+Why new structure?

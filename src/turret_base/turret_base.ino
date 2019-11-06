@@ -10,7 +10,7 @@ void setup() {
   Serial.begin(115200);
   d.setup();
   Serial.println("setup");
-  
+
 }
 
 void loop() {
@@ -93,5 +93,7 @@ get commands via something (serial for now )
 
 WASD from laptop (higher-level behavior)
 
+TODO: Add in ramping to prevent over current draw
+TODO: Rewrite firmware to use new boards
 
 */

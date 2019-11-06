@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Current state:
 
@@ -16,10 +17,22 @@ Each state has an update function that modifies it's current command
 In main
 
 """
+
+
+import rospy
+from std_msgs.msg import Int16
+from std_msgs.msg import Bool
+
 import Tkinter as tk
 
 class GUIWindow:
     def __init__(self):
+        rospy.init_node("GuiWindow")
+        self.state_pub = rospy.Publisher("/state", Int16, queue_size=1)
+        self.estop_pub = rospy.Publisher("/estop", Bool, queue_size=1)
+        self.update_rate = rospy.Rate(10)
+
+        # GUI Setup
         self.root = tk.Tk()
         self.root.geometry("500x500")
         self.isEStopped = True
@@ -64,8 +77,13 @@ class GUIWindow:
         self.root.bind('q', self.stopCB)
 
         self.button_shooter = tk.Button(self.root, width=15,
-                text="Test Shooter",
-                command = self.shootCB)
+                text="Shooter On",
+                command = self.shootOnCB)
+        self.button_shooter.pack()
+
+        self.button_shooter = tk.Button(self.root, width=15,
+                text="Shooter Off",
+                command = self.shootOffCB)
         self.button_shooter.pack()
 
         # State 1
@@ -88,7 +106,9 @@ class GUIWindow:
                 width = 30, height = 1, fg="white", bg="black")
         self.label_output2.pack()
 
-
+        # Save previous values to avoid publishing duplicates
+        self._prev_state = 0
+        self._prev_isEStopped = False
 
     def estopCB(self):
         if self.isEStopped == True:
@@ -116,9 +136,13 @@ class GUIWindow:
         self.label_output2.configure(text = "Mode: teleop - D")
         self.current_state = 4
 
-    def shootCB(self, event=None):
-        self.label_output2.configure(text = "Mode: teleop - shoot")
+    def shootOnCB(self, event=None):
+        self.label_output2.configure(text = "Mode: teleop - shoot on")
         self.current_state = 5
+
+    def shootOffCB(self, event=None):
+        self.label_output2.configure(text = "Mode: teleop - shoot off")
+        self.current_state = 6
 
     # Note: Reserving 6-9 for other low-level behaviors
 
@@ -130,12 +154,22 @@ class GUIWindow:
         self.label_output2.configure(text = "Mode: state2")
         self.current_state = 11
 
-    def update(self):
-        self.root.update()
+    def run(self):
+        while not rospy.is_shutdown():
+            self.root.update()
 
+            # Don't send duplicates
+            if self.current_state != self._prev_state:
+                state_msg = Int16()
+                state_msg.data = self.current_state
+                self.state_pub.publish(state_msg)
+                self._prev_state = self.current_state
+            if self.isEStopped != self._prev_isEStopped:
+                estop_msg = Bool()
+                estop_msg.data = self.isEStopped
+                self.estop_pub.publish(estop_msg)
+                self._prev_isEStopped = self.isEStopped
 
 if __name__ == "__main__":
     w = GUIWindow()
-
-    while True:
-        w.update()
+    w.run()
