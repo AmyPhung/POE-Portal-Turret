@@ -4,6 +4,7 @@ import rospy
 import serial
 from geometry_msgs.msg import Twist
 from portal_turret.msg import Shooter
+from std_msgs.msg import Int32
 
 class ArduinoComms:
     def __init__(self, port='/dev/ttyACM0', baud=115200):
