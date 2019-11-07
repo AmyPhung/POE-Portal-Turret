@@ -1,5 +1,5 @@
 from mpu6050 import mpu6050
-import simpleaudio as sa
+from playsound import playsound
 import random
 import time
 
@@ -19,7 +19,5 @@ if __name__ == "__main__":
         if accel_data['z'] < Z_ACCEL_THRESHOLD:
             # play screaming sound
             filename += (str(random.randint(1,6))+'.wav')
-            wave_obj = sa.WaveObject.from_wave_file(filename)
-            play_obj = wave_obj.play()
-            play_obj.wait_done()
+            playsound(filename)
             time.sleep(random.random())
