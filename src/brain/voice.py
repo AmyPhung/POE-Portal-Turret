@@ -10,7 +10,7 @@ call(["amixer", "-D", "pulse", "sset", "Master", "100%"])
 
 # accelerometer z-axis threshold (m/s^2)
 # beneath this threshold robot is said to be tilting/falling
-Z_ACCEL_THRESHOLD = 9
+Z_ACCEL_THRESHOLD = 8
 
 if __name__ == "__main__":
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     while True:
         accel_data = imu.get_accel_data()
         filename = 'audio_files/Turret_turret_tipped_'
-        print(accel_data)
+        #print(accel_data)
 
         if accel_data['z'] < Z_ACCEL_THRESHOLD:
             # play screaming sound
