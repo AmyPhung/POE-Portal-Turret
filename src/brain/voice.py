@@ -8,13 +8,13 @@ import time
 # beneath this threshold robot is said to be tilting/falling
 Z_ACCEL_THRESHOLD = 9
 
-if name if __name__ == "__main__":
+if __name__ == "__main__":
 
     imu = mpu6050(0x68)
 
     while True:
         accel_data = imu.get_accel_data()
-        filename = 'Turret_turret_tipped_'
+        filename = 'audio_files/Turret_turret_tipped_'
 
         if accel_data['z'] < Z_ACCEL_THRESHOLD:
             # play screaming sound
