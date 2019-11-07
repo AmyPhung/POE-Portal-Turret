@@ -7,7 +7,7 @@ import time
 
 # accelerometer z-axis threshold (m/s^2)
 # beneath this threshold robot is said to be tilting/falling
-Z_ACCEL_THRESHOLD = 8
+Z_ACCEL_THRESHOLD = 7
 
 if __name__ == "__main__":
 
