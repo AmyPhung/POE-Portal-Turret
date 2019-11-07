@@ -1,5 +1,6 @@
 from mpu6050 import mpu6050
-from playsound import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 import random
 import time
 
@@ -19,5 +20,6 @@ if __name__ == "__main__":
         if accel_data['z'] < Z_ACCEL_THRESHOLD:
             # play screaming sound
             filename += (str(random.randint(1,6))+'.wav')
-            playsound(filename)
+            sound = AudioSegment.from_wav(filename)
+            play(sound)
             time.sleep(random.random())
