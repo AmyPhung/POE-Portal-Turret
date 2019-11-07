@@ -26,4 +26,3 @@ if __name__ == "__main__":
             filename += (str(random.randint(1,6))+'.wav')
             sound = AudioSegment.from_wav(filename)
             play(sound)
-            time.sleep(random.random())
