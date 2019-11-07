@@ -3,11 +3,7 @@ from pydub import AudioSegment
 from pydub.playback import play
 import random
 import time
-import alsaaudio
 
-
-m = alsaaudio.Mixer()
-m.setvolume(100)
 
 # accelerometer z-axis threshold (m/s^2)
 # beneath this threshold robot is said to be tilting/falling
