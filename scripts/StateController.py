@@ -5,6 +5,7 @@ from std_msgs.msg import Int16
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from portal_turret.msg import Shooter
+from portal_turret.msg import TwistLabeled
 
 import behaviors.behaviorlib as behaviorlib
 
@@ -37,7 +38,7 @@ class StateController:
         self.estop = msg.data
 
     def sc_twistCB(self, msg):
-        if sc_twist_sub.label == self.state:
+        if msg.label.data == self.state:
             self._sc_twist_cmd = msg.twist
 
     def run(self):
