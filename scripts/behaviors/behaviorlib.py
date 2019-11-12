@@ -78,13 +78,11 @@ def computeFeedOffCommand():
     return twist_cmd, shooter_cmd, feed_cmd
 
 # High level behaviors TODO
-def computeState1Command(target):
-    # if target == None:
-    #     return None
-    # cmd = RobotCommand()
-    # cmd.f_vel = 40
-    # cmd.a_vel = -target[0]
-    return None, None, None
-
+def computeState1Command(sc_twist_cmd):
+    twist_cmd = sc_twist_cmd # Will retain previous value
+    shooter_cmd = None
+    feed_cmd = None
+    return twist_cmd, shooter_cmd, feed_cmd
+    
 def computeState2Command():
     return None, None, None

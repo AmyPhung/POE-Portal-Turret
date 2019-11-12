@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import rospy
-from std_msgs.msg import Int32
 from std_msgs.msg import Int16
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
@@ -17,20 +16,29 @@ class StateController:
         rospy.init_node("StateController")
         self.state_sub = rospy.Subscriber("/state", Int16, self.stateCB)
         self.estop_sub = rospy.Subscriber("/estop", Bool, self.estopCB)
+        self.sc_twist_sub = rospy.Subscriber("state_controller/cmd_vel",
+                                         TwistLabeled, self.sc_twistCB)
+
         self.twist_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         self.shooter_pub = rospy.Publisher("/cmd_shoot", Shooter, queue_size=1)
-        self.feed_pub = rospy.Publisher("/cmd_feed", Int32, queue_size=1)
+        self.feed_pub = rospy.Publisher("/cmd_feed", Int16, queue_size=1)
         self.update_rate = rospy.Rate(10)
 
         self._prev_twist_cmd = Twist()
         self._prev_shooter_cmd = Shooter()
-        self._prev_feed_cmd = Int32()
+        self._prev_feed_cmd = Int16()
+
+        self._sc_twist_cmd = Twist()
 
     def stateCB(self, msg):
         self.state = msg.data
 
     def estopCB(self, msg):
         self.estop = msg.data
+
+    def sc_twistCB(self, msg):
+        if sc_twist_sub.label == self.state:
+            self._sc_twist_cmd = msg.twist
 
     def run(self):
         while not rospy.is_shutdown():
@@ -53,7 +61,7 @@ class StateController:
             elif self.state == 8:
                 twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeFeedOffCommand()
             elif self.state == 10:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState1Command()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState1Command(self._sc_twist_cmd)
             elif self.state == 11:
                 twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState2Command()
 

@@ -4,7 +4,7 @@ import rospy
 import serial
 from geometry_msgs.msg import Twist
 from portal_turret.msg import Shooter
-from std_msgs.msg import Int32
+from std_msgs.msg import Int16
 
 class ArduinoComms:
     def __init__(self, port='/dev/ttyACM0', baud=115200):
@@ -12,12 +12,12 @@ class ArduinoComms:
 
         self.twist_cmd = Twist()
         self.shooter_cmd = Shooter()
-        self.feed_cmd = Int32()
+        self.feed_cmd = Int16()
 
         rospy.init_node("ArduinoComms")
         self.twist_sub = rospy.Subscriber("/cmd_vel", Twist, self.twistCB)
         self.shooter_sub = rospy.Subscriber("/cmd_shoot", Shooter, self.shooterCB)
-        self.feed_sub = rospy.Subscriber("/cmd_feed", Int32, self.feedCB)
+        self.feed_sub = rospy.Subscriber("/cmd_feed", Int16, self.feedCB)
         self.update_rate = rospy.Rate(10)
 
     def twistCB(self, msg):
