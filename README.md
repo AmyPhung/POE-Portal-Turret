@@ -23,6 +23,9 @@ Assuming you have the proper dependencies installed, to set up this repository
 + `cd ~/catkin_ws`
 + `catkin_make`
 
++ `pip2 install face_recognition`
+https://github.com/ros-drivers/video_stream_opencv
+
 #### Euclid
 To get the most recent version of the code on the Euclid, follow these instructions:
 

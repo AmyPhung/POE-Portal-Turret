@@ -22,14 +22,17 @@ In main
 import rospy
 from std_msgs.msg import Int16
 from std_msgs.msg import Bool
+from std_msgs.msg import String
 
 import Tkinter as tk
+import glob
 
 class GUIWindow:
     def __init__(self):
         rospy.init_node("GuiWindow")
         self.state_pub = rospy.Publisher("/state", Int16, queue_size=1)
         self.estop_pub = rospy.Publisher("/estop", Bool, queue_size=1)
+        self.target_pub  = rospy.Publisher("/target", String, queue_size=1)
         self.update_rate = rospy.Rate(10)
 
         # GUI Setup
@@ -96,6 +99,28 @@ class GUIWindow:
                 command = self.feedOffCB)
         self.button_feedOff.pack()
 
+        # Set up drop-down menu with potential targets
+        tk.Label(self.root, text="Select a target:").pack()
+
+        filepath = rospy.get_param("/path_to_faces", "/home/amy/test_ws/src/portal_turret/scripts/faces/")
+        filenames = glob.glob(filepath+"*.jpg")
+
+        self._names = []
+
+        for filename in filenames:
+            name = filename[filename.rfind('/')+1:filename.rfind('.')]
+            self._names.append(name)
+
+        self.target_var = tk.StringVar(self.root)
+        self.target = self.target_var.get()
+
+        self.target_menu = tk.OptionMenu(self.root, self.target_var, *self._names)
+        self.target_menu.pack()
+        self.button_confirm = tk.Button(self.root, width=15,
+                text="Confirm Target",
+                command = self.confirmCB)
+        self.button_confirm.pack()
+
         # State 1
         self.button_state1 = tk.Button(self.root, width=30,
                 text="Switch to state1",
@@ -161,6 +186,13 @@ class GUIWindow:
     def feedOffCB(self, event=None):
         self.label_output2.configure(text = "Mode: teleop - feed off")
         self.current_state = 8
+
+    def confirmCB(self, event=None):
+        self.target = self.target_var.get()
+        self.label_output2.configure(text = "Selected target: " + str(self.target))
+        target_msg = String()
+        target_msg.data = str(self.target)
+        self.target_pub.publish(target_msg)
 
     # Note: Reserving 6-9 for other low-level behaviors
 

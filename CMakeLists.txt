@@ -52,6 +52,8 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    Shooter.msg
    TwistLabeled.msg
+   LabeledPoint.msg
+   LabeledPointArray.msg
  )
 
 ## Generate services in the 'srv' folder

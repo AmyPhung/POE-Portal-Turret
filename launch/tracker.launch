@@ -1,0 +1,4 @@
+<launch>
+   <node pkg="portal_turret" type="FaceRecognition.py" name="face_recognition" output="screen"/>
+   
+</launch>
