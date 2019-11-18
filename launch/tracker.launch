@@ -1,4 +1,13 @@
 <launch>
-   <node pkg="portal_turret" type="FaceRecognition.py" name="face_recognition" output="screen"/>
-   
+   <node pkg="portal_turret" type="FaceRecognition.py" name="face_recognition" output="screen">
+     <param name="~path_to_faces" value="$(find portal_turret)/scripts/faces/"/>
+     <param name="~display" value="true"/>
+   </node>
+
+   <node pkg="portal_turret" type="PersonTracker.py" name="person_tracker" output="screen">
+     <param name="~dist_threshold" value="30"/>
+     <param name="~linear_k" value="0.7"/>
+     <param name="~angular_k" value="0.3"/>
+   </node>
+
 </launch>

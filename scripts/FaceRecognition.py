@@ -18,10 +18,13 @@ class FaceRecognition:
 
         # self._camera_msg = Image()
         self.video_capture = cv2.VideoCapture(0)
-        self.display = False
+        self.display = rospy.get_param("~display", True)
 
-        filepath = rospy.get_param("/path_to_faces", "/home/amy/test_ws/src/portal_turret/scripts/faces/")
+        filepath = rospy.get_param("~path_to_faces", "")
         filenames = glob.glob(filepath+"*.jpg")
+
+        if filepath == "":
+            rospy.logwarn("path_to_faces parameter not set")
 
         images = []
         self.known_face_encodings = []

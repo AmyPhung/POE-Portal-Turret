@@ -79,10 +79,15 @@ def computeFeedOffCommand():
 
 # High level behaviors TODO
 def computeState1Command(sc_twist_cmd):
-    twist_cmd = sc_twist_cmd # Will retain previous value
+    # Follows people in frame - nobody in particular
+    twist_cmd = sc_twist_cmd
     shooter_cmd = None
     feed_cmd = None
     return twist_cmd, shooter_cmd, feed_cmd
-    
-def computeState2Command():
-    return None, None, None
+
+def computeState2Command(sc_twist_cmd):
+    # Follows a specified target
+    twist_cmd = sc_twist_cmd
+    shooter_cmd = None
+    feed_cmd = None
+    return twist_cmd, shooter_cmd, feed_cmd

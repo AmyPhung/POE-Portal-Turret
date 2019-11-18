@@ -64,7 +64,7 @@ class StateController:
             elif self.state == 10:
                 twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState1Command(self._sc_twist_cmd)
             elif self.state == 11:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState2Command()
+                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState2Command(self._sc_twist_cmd)
 
             # Don't send invalid or duplicate command
             if twist_cmd != None and \

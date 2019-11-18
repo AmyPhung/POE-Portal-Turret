@@ -6,7 +6,14 @@ from portal_turret.msg import TwistLabeled
 from std_msgs.msg import String
 from portal_turret.msg import LabeledPointArray
 
+import math
+
 class PersonTracker:
+    """
+    Tracks 3D location of a specified person by name and face. Relies on being
+    able to spot face at least once, then will keep track of the person as long
+    as they remain in frame.
+    """
     def __init__(self):
         rospy.init_node("PersonTracker")
         self.person_sub = rospy.Subscriber("/camera/person/detection_data",
@@ -15,14 +22,24 @@ class PersonTracker:
                                            String, self.targetCB)
         self.faces_sub = rospy.Subscriber("/detected_faces",
                                            LabeledPointArray, self.facesCB)
-        self.twist_pub = rospy.Publisher("state_controller/cmd_vel",
+        self.twist_pub = rospy.Publisher("/state_controller/cmd_vel",
                                          TwistLabeled, queue_size=1)
         self.update_rate = rospy.Rate(10)
+
+        self.dist_threshold = rospy.get_param("~dist_threshold", 30)
+        print("Using dist_threshold = " + str(self.dist_threshold))
+        self.linear_k = rospy.get_param("~linear_k", 0.7)
+        print("Using linear_k = " + str(self.linear_k))
+        self.angular_k = rospy.get_param("~angular_k", 0.3)
+        print("Using angular_k = " + str(self.angular_k))
 
         self._person_msg = PersonDetection()
         self._target_msg = String()
         self._faces_msg = LabeledPointArray()
         self._twist_cmd = TwistLabeled()
+
+        self._prev_ids = {} # Dictionary containing names and previous detection
+                            # id values
 
     # Callback functions
     def personCB(self, msg):
@@ -36,53 +53,82 @@ class PersonTracker:
 
     # Identify target within frame
     def findTargetIdx(self):
-        # TODO:
         """
-        self.prev_ids = {}
+        Find index of target in person detection data. Returns -1 if it can't
+        find the target.
+        """
+        target = self._target_msg.data
 
-        if 
+        if target not in self._prev_ids:
+            self._prev_ids[target] = [] # Add new list of id values
+        else:
+            prev_ids = self._prev_ids[target]
 
-        distance threshold # distance for person to still match
+            # If target has already been identified with a prior id, then use
+            # that info
+            for idx in range(self._person_msg.detected_person_count):
+                tracking_id = self._person_msg.persons[idx].person_id.tracking_id
+                if tracking_id in prev_ids:
+                    print("Found " + str(target))
+                    print("Using id " + str(tracking_id))
+                    return idx
 
-        if target in detected_faces:
-            self.findNearestIdx(detected_faces[target].image_center,
-                                self._person_msg.persons)
+        # If the code reaches this point, we can't rely on our dictionary. At
+        # this point, we check to see if the person is even in the image. We do
+        # this by computing the distance between the tracked target's face
+        # and the tracked people to find the nearest person. If this distance
+        # is below a certain threshold, we can safely assume they're the same
+        # people and can add their ID to the dictionary
 
-            if dist(detected_faces.image_center,
-
-        center of mass.image
+        for face in self._faces_msg.points:
+            if face.label == target:
+                idx, detection_id =  \
+                    self.findNearestIdx((face.point.x, face.point.y),
+                                        self._person_msg.persons,
+                                        self.dist_threshold)
+                if idx != -1: # If person is found, save detection id to dict
+                    self._prev_ids[target].append(detection_id)
+                return idx
+        # If the code reaches this point, we can't find the target
+        return -1
 
     def findNearestIdx(target_center, detected_people, threshold):
-        # threshold is max distance for it to be considered the same person
+        """
+        Finds index of detected person whose center is closest to the center
+        of the identified target's face
+        """
+        # Threshold is max distance between the center of a face and an unknown
+        # detected person to be considered the same person
         nearest_idx = -1
+        detection_id = -1
         min_dist = 100000000000
         for i in range(len(detected_people)):
             person = detected_people[i]
 
-            detected_center = (person.center_of_mass.image.x,
-                               person.center_of_mass.image.y)
+            detected_cx = person.center_of_mass.image.x
+            detected_cy = person.center_of_mass.image.y
+            # TODO: Check coordinate system of each point + convert here
 
-            if dist(detected_center, target_center) < min_dist and  \
-               dist(detected_center, target_center) < threshold:
+            distance = dist(detected_cx, detected_cy, \
+                            target_center[0], target_center[1])
+
+            if distance < threshold and distance < min_dist:
                nearest_idx = i
+               detection_id = person.person_id
 
-       return nearest_idx
-
-
-        """
-        # self._person_msg.persons[0].center_of_mass.world.x
+        return nearest_idx, detection_id
 
     # Control loop
-    def computeTwistMessage(self):
+    def computeTwistMessage(self, idx):
         # If no people are detected or there's no target, don't publish commands
         if len(self._person_msg.persons) == 0 or self._target_msg.data == "":
             self._twist_cmd = TwistLabeled()
-            self._twist_cmd.label.data = 10
+            self._twist_cmd.label.data = 11
             return
 
 
-        x = self._person_msg.persons[0].center_of_mass.world.x
-        z = self._person_msg.persons[0].center_of_mass.world.z
+        x = self._person_msg.persons[idx].center_of_mass.world.x
+        z = self._person_msg.persons[idx].center_of_mass.world.z
 
         # Compute relative position - -100 for left of robot, 100 for right
         rel_pos = int(reMap(x,
@@ -95,16 +141,22 @@ class PersonTracker:
 
         self._twist_cmd = TwistLabeled()
         self._twist_cmd.label.data = 10
-        self._twist_cmd.twist.linear.x = dist_pos * 0.5 # Multiply by proportional constant
-        self._twist_cmd.twist.angular.z = rel_pos * 0.5 # Multiply by proportional constant
+        self._twist_cmd.twist.linear.x = dist_pos * self.linear_k # Multiply by proportional constant
+        self._twist_cmd.twist.angular.z = rel_pos * self.angular_k # Multiply by proportional constant
 
     def run(self):
         while not rospy.is_shutdown():
-            self.computeTwistMessage()
-            #rospy.loginfo("Linear Command: " + str(self._twist_cmd.twist.linear.x))
-            #rospy.loginfo("Angular Command: " + str(self._twist_cmd.twist.angular.z))
-            self.twist_pub.publish(self.twist_cmd)
+            idx = self.findTargetIdx()
+            if idx != -1: # Check for valid index value
+                self.computeTwistMessage(idx)
+                #rospy.loginfo("Linear Command: " + str(self._twist_cmd.twist.linear.x))
+                #rospy.loginfo("Angular Command: " + str(self._twist_cmd.twist.angular.z))
+                self.twist_pub.publish(self.twist_cmd)
             self.update_rate.sleep()
+
+def dist(x1,y1,x2,y2):
+     dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+     return dist
 
 def reMap(value, maxInput, minInput, maxOutput, minOutput):
 
