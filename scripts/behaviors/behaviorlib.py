@@ -1,4 +1,4 @@
-from std_msgs.msg import Int32
+from std_msgs.msg import Int16
 from geometry_msgs.msg import Twist
 from portal_turret.msg import Shooter
 
@@ -6,7 +6,7 @@ from portal_turret.msg import Shooter
 def computeEstopCommand():
     twist_cmd = Twist()
     shooter_cmd = Shooter()
-    feed_cmd = Int32()
+    feed_cmd = Int16()
 
     twist_cmd.linear.x = 0
     twist_cmd.angular.z = 0
@@ -52,8 +52,8 @@ def computeShootOnCommand():
     twist_cmd = None # Will retain previous value
     shooter_cmd = Shooter()
     feed_cmd = None
-    shooter_cmd.r_cmd = 100
-    shooter_cmd.l_cmd = 100
+    shooter_cmd.r_cmd = 50
+    shooter_cmd.l_cmd = 50
     return twist_cmd, shooter_cmd, feed_cmd
 
 def computeShootOffCommand():
@@ -77,7 +77,7 @@ def computeFeedOffCommand():
     feed_cmd.data = 0
     return twist_cmd, shooter_cmd, feed_cmd
 
-# High level behaviors TODO
+# High level behaviors
 def computeState1Command(sc_twist_cmd):
     # Follows people in frame - nobody in particular
     twist_cmd = sc_twist_cmd

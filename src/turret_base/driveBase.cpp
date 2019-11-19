@@ -47,10 +47,13 @@ void DiffDriveBase::run(robotCmd cmd){
     LMotor->run(BACKWARD);  // Actually Forwards
   }
 
-  LShooter->setSpeed(l_shoot_speed);
-  LShooter->run(BACKWARD); // Actually Forwards
-  RShooter->setSpeed(r_shoot_speed);
-  RShooter->run(FORWARD);
+  analogWrite(l_shooter_pin, l_shoot_speed); // Can go from 0 to 255
+  analogWrite(r_shooter_pin, r_shoot_speed); // Can go from 0 to 255
+
+  // LShooter->setSpeed(l_shoot_speed);
+  // LShooter->run(BACKWARD); // Actually Forwards
+  // RShooter->setSpeed(r_shoot_speed);
+  // RShooter->run(FORWARD);
 
   feedServo.write(feed);
 }
