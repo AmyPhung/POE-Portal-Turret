@@ -34,17 +34,17 @@ void DiffDriveBase::run(robotCmd cmd){
 
   if (Rspeed < 0) {
     RMotor->setSpeed(-Rspeed);
-    RMotor->run(FORWARD);  // Wheel is backwards
+    RMotor->run(BACKWARD);
   } else {
     RMotor->setSpeed(Rspeed);
-    RMotor->run(BACKWARD);  // Actually Forward
+    RMotor->run(FORWARD);
   }
   if (Lspeed < 0) {
     LMotor->setSpeed(-Lspeed);
-    LMotor->run(FORWARD);  // Wheel is backwards
+    LMotor->run(BACKWARD);
   } else {
     LMotor->setSpeed(Lspeed);
-    LMotor->run(BACKWARD);  // Actually Forwards
+    LMotor->run(FORWARD); 
   }
 
   analogWrite(l_shooter_pin, l_shoot_speed); // Can go from 0 to 255
