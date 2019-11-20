@@ -3,4 +3,5 @@
   <include file="$(find portal_turret)/launch/bringup_min.launch"/>
   <!-- Tracking code -->
   <node pkg="portal_turret" type="Tracker.py" name="tracker" output="screen"/>
+  <!--<include file="$(find portal_turret)/launch/tracker.launch"/> -->
 </launch>

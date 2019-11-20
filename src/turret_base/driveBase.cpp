@@ -8,6 +8,7 @@ DiffDriveBase::DiffDriveBase(){
 void DiffDriveBase::setup(){
   shield.begin();
   feedServo.attach(10);
+  feedServo.write(84); // Start off stopped
 }
 
 void DiffDriveBase::run(robotCmd cmd){
