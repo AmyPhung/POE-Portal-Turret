@@ -68,7 +68,7 @@ def computeFeedOnCommand():
     twist_cmd = None # Will retain previous value
     shooter_cmd = None
     feed_cmd = Int16()
-    feed_cmd.data = 50
+    feed_cmd.data = 100
     return twist_cmd, shooter_cmd, feed_cmd
 def computeFeedOffCommand():
     twist_cmd = None # Will retain previous value
