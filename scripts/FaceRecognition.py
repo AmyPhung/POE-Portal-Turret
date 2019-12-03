@@ -5,6 +5,7 @@ import face_recognition
 import glob
 import cv2
 import numpy as np
+from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 from portal_turret.msg import LabeledPoint
 from portal_turret.msg import LabeledPointArray
@@ -14,10 +15,15 @@ class FaceRecognition:
         rospy.init_node("face_recognition")
         self.update_rate = rospy.Rate(10)
         self.face_pub = rospy.Publisher('/detected_faces', LabeledPointArray, queue_size=1)
-        # self.camera_sub = rospy.Subscriber('/webcam/image_raw', Image, self.cameraCB)
 
-        # self._camera_msg = Image()
-        self.video_capture = cv2.VideoCapture(0)
+        self.camera_sub = rospy.Subscriber('/camera/color/image_raw', 
+            Image, self.cameraCB)
+             # use /camera/color/image_raw for euclid
+             # use /webcam/image_raw for local testing
+
+        self._camera_msg = None
+        self._bridge = CvBridge()
+        # self.video_capture = cv2.VideoCapture(0)
         self.display = rospy.get_param("~display", True)
 
         filepath = rospy.get_param("~path_to_faces", "")
@@ -31,6 +37,7 @@ class FaceRecognition:
         self.known_face_names = []
 
         for filename in filenames:
+            rospy.loginfo("Training on image " + str(filename))
             # Load in image
             image = face_recognition.load_image_file(filename)
             images.append(image)
@@ -41,11 +48,15 @@ class FaceRecognition:
             name = filename[filename.rfind('/')+1:filename.rfind('.')]
             self.known_face_names.append(name)
 
+        rospy.loginfo("Face Recognition Setup Complete")
+
 
 
     def findFaces(self):
         # Grab a single frame of video
-        ret, frame = self.video_capture.read()
+        # ret, frame = self.video_capture.read()
+        frame = self._bridge.imgmsg_to_cv2(self._camera_msg,
+                                          desired_encoding="passthrough")
 
         # Resize frame of video to 1/4 size for faster face recognition processing
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -113,6 +124,9 @@ class FaceRecognition:
                 pass
 
         return output_msg
+
+    def cameraCB(self, msg):
+        self._camera_msg = msg
 
     def run(self):
         while not rospy.is_shutdown():

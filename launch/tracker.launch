@@ -1,4 +1,18 @@
 <launch>
+   <!-- launch video stream (only needed for local testing)-->
+   <!-- <include file="$(find video_stream_opencv)/launch/camera.launch" >
+       <arg name="camera_name" value="webcam" />
+       <arg name="video_stream_provider" value="0" />
+       <arg name="set_camera_fps" value="30"/>
+       <arg name="buffer_queue_size" value="100" />
+       <arg name="fps" value="30" />
+       <arg name="frame_id" value="webcam" />
+       <arg name="camera_info_url" value="" />
+       <arg name="flip_horizontal" value="false" />
+       <arg name="flip_vertical" value="false" />
+       <arg name="visualize" value="true" />
+   </include> -->
+
    <node pkg="portal_turret" type="FaceRecognition.py" name="face_recognition" output="screen">
      <param name="~path_to_faces" value="$(find portal_turret)/scripts/faces/"/>
      <param name="~display" value="true"/>
