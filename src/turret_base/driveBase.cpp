@@ -24,8 +24,8 @@ void DiffDriveBase::run(robotCmd cmd){
   if (cmd.feed > 100) cmd.feed = 100;
   if (cmd.feed < -100) cmd.feed = -100;
 
-  int forward = map(cmd.f_vel, -100, 100, -127, 127);
-  int turn = map(cmd.a_vel, -100, 100, -127, 127);    // Left is positive, RH rule
+  int forward = map(cmd.f_vel, -100, 100, -255, 255);
+  int turn = map(cmd.a_vel, -100, 100, -255, 255);    // Left is positive, RH rule
   int l_shoot_speed = map(cmd.l_shooter, 0, 100, 0, 255);
   int r_shoot_speed = map(cmd.r_shooter, 0, 100, 0, 255);
   int feed = map(cmd.feed, -100, 100, 0, 168);

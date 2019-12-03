@@ -149,8 +149,8 @@ class PersonTracker:
             idx = self.findTargetIdx()
             if idx != -1: # Check for valid index value
                 self.computeTwistMessage(idx)
-                #rospy.loginfo("Linear Command: " + str(self._twist_cmd.twist.linear.x))
-                #rospy.loginfo("Angular Command: " + str(self._twist_cmd.twist.angular.z))
+                rospy.loginfo("Linear Command: " + str(self._twist_cmd.twist.linear.x))
+                rospy.loginfo("Angular Command: " + str(self._twist_cmd.twist.angular.z))
                 self.twist_pub.publish(self.twist_cmd)
             self.update_rate.sleep()
 

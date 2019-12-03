@@ -57,9 +57,9 @@ class FaceRecognition:
         # ret, frame = self.video_capture.read()
         frame = self._bridge.imgmsg_to_cv2(self._camera_msg,
                                           desired_encoding="passthrough")
-
+	frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        small_frame = cv2.resize(frame, (0, 0), fx=0.99, fy=0.99)
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
