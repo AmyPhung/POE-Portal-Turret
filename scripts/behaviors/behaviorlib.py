@@ -91,3 +91,34 @@ def computeState2Command(sc_twist_cmd):
     shooter_cmd = None
     feed_cmd = None
     return twist_cmd, shooter_cmd, feed_cmd
+
+def computeTeleopCommand(joy_cmd):
+    # axis 1: foward (1), backward (-1)
+    # axis 0: left (1), right (-1)
+    # axis 5: right trigger (1 unpressed, -1 pressed)
+    # button 5: right bumper (0 unpressed, 1 pressed)
+
+    # Right joystick used for driving
+    twist_cmd = Twist()
+    shooter_cmd = Shooter()
+    feed_cmd = Int16()
+
+    # Wait for joystick
+    if len(joy_cmd.axes) == 0:
+        return twist_cmd, shooter_cmd, feed_cmd
+
+    twist_cmd.linear.x = int(joy_cmd.axes[1] * 100)
+    twist_cmd.angular.z = int(joy_cmd.axes[0] * 100)
+
+    shooter_cmd.r_cmd = int(reMap(joy_cmd.axes[5], -1, 1, 100, 0))
+    shooter_cmd.l_cmd = int(reMap(joy_cmd.axes[5], -1, 1, 100, 0))
+
+    feed_cmd.data = 100*joy_cmd.buttons[5]
+
+    return twist_cmd, shooter_cmd, feed_cmd
+
+def reMap(value, maxInput, minInput, maxOutput, minOutput):
+	inputSpan = maxInput - minInput
+	outputSpan = maxOutput - minOutput
+	scaled_value = float(value - minInput) / float(inputSpan)
+	return minOutput + (scaled_value * outputSpan)

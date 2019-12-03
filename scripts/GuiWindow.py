@@ -99,6 +99,11 @@ class GUIWindow:
                 command = self.feedOffCB)
         self.button_feedOff.pack()
 
+        self.button_joy = tk.Button(self.root, width=15,
+                text="Use Joystick",
+                command = self.joyCB)
+        self.button_joy.pack()
+
         # Set up drop-down menu with potential targets
         tk.Label(self.root, text="Select a target:").pack()
 
@@ -135,11 +140,17 @@ class GUIWindow:
 
         # Output Window
         self.label_output1 = tk.Label(self.root, text="Disactivated",
-                width = 30, height = 1, fg="white", bg="black")
+                width = 30, height = 1, fg="white", bg="black", anchor=tk.W)
         self.label_output1.pack()
         self.label_output2 = tk.Label(self.root, text="Mode: teleop",
-                width = 30, height = 1, fg="white", bg="black")
+                width = 30, height = 1, fg="white", bg="black", anchor=tk.W)
         self.label_output2.pack()
+        self.label_output3 = tk.Label(self.root, text="Shooter Status: off",
+                width = 30, height = 1, fg="white", bg="black", anchor=tk.W)
+        self.label_output3.pack()
+        self.label_output4 = tk.Label(self.root, text="Feed Status: off",
+                width = 30, height = 1, fg="white", bg="black", anchor=tk.W)
+        self.label_output4.pack()
 
         # Save previous values to avoid publishing duplicates
         self._prev_state = 0
@@ -172,20 +183,24 @@ class GUIWindow:
         self.current_state = 4
 
     def shootOnCB(self, event=None):
-        self.label_output2.configure(text = "Mode: teleop - shoot on")
+        self.label_output3.configure(text = "Shooter Status: on")
         self.current_state = 5
 
     def shootOffCB(self, event=None):
-        self.label_output2.configure(text = "Mode: teleop - shoot off")
+        self.label_output3.configure(text = "Shooter Status: off")
         self.current_state = 6
 
     def feedOnCB(self, event=None):
-        self.label_output2.configure(text = "Mode: teleop - feed on")
+        self.label_output4.configure(text = "Feed Status: on")
         self.current_state = 7
 
     def feedOffCB(self, event=None):
-        self.label_output2.configure(text = "Mode: teleop - feed off")
+        self.label_output4.configure(text = "Feed Status: off")
         self.current_state = 8
+
+    def joyCB(self, event=None):
+        self.label_output2.configure(text = "Mode: teleop joystick")
+        self.current_state = 9
 
     def confirmCB(self, event=None):
         self.target = self.target_var.get()

@@ -3,6 +3,7 @@
 import rospy
 from std_msgs.msg import Int16
 from std_msgs.msg import Bool
+from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
 from portal_turret.msg import Shooter
 from portal_turret.msg import TwistLabeled
@@ -19,6 +20,8 @@ class StateController:
         self.estop_sub = rospy.Subscriber("/estop", Bool, self.estopCB)
         self.sc_twist_sub = rospy.Subscriber("state_controller/cmd_vel",
                                          TwistLabeled, self.sc_twistCB)
+        self.joy_sub = rospy.Subscriber("/joy",
+                                         Joy, self.joystickCB)
 
         self.twist_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         self.shooter_pub = rospy.Publisher("/cmd_shoot", Shooter, queue_size=1)
@@ -28,6 +31,7 @@ class StateController:
         self._prev_twist_cmd = Twist()
         self._prev_shooter_cmd = Shooter()
         self._prev_feed_cmd = Int16()
+        self._joy_cmd = Joy()
 
         self._sc_twist_cmd = Twist()
 
@@ -41,30 +45,47 @@ class StateController:
         if msg.label.data == self.state:
             self._sc_twist_cmd = msg.twist
 
+    def joystickCB(self, msg):
+        self._joy_cmd = msg
+
     def run(self):
         while not rospy.is_shutdown():
             if self.state == 0 or self.estop:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeEstopCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeEstopCommand()
             elif self.state == 1:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeForwardCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeForwardCommand()
             elif self.state == 2:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeBackwardCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeBackwardCommand()
             elif self.state == 3:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeLeftCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeLeftCommand()
             elif self.state == 4:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeRightCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeRightCommand()
             elif self.state == 5:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeShootOnCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeShootOnCommand()
             elif self.state == 6:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeShootOffCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeShootOffCommand()
             elif self.state == 7:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeFeedOnCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeFeedOnCommand()
             elif self.state == 8:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeFeedOffCommand()
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeFeedOffCommand()
+            elif self.state == 9:
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeTeleopCommand(self._joy_cmd)
             elif self.state == 10:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState1Command(self._sc_twist_cmd)
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeState1Command(self._sc_twist_cmd)
             elif self.state == 11:
-                twist_cmd, shooter_cmd, feed_cmd = behaviorlib.computeState2Command(self._sc_twist_cmd)
+                twist_cmd, shooter_cmd, feed_cmd = \
+                behaviorlib.computeState2Command(self._sc_twist_cmd)
 
             # Don't send invalid or duplicate command
             if twist_cmd != None and \
