@@ -8,5 +8,6 @@
 
 DiffDriveBase d;
 robotCmd cmd;
-robotCmd readSerial();
+void readSerial(robotCmd *cmd_out);
+
 #endif

@@ -42,7 +42,7 @@ class Tracker:
         self.twist_cmd = TwistLabeled()
         self.twist_cmd.label.data = 10
         self.twist_cmd.twist.linear.x = dist_pos * 0.5 # Multiply by proportional constant
-        self.twist_cmd.twist.angular.z = rel_pos * 0.5 # Multiply by proportional constant
+        self.twist_cmd.twist.angular.z = rel_pos * -0.5 # Multiply by proportional constant
 
     def run(self):
         while not rospy.is_shutdown():
