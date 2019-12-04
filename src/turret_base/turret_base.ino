@@ -1,15 +1,28 @@
 #include "turret_base.h"
 #include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
+
+#define LED_PIN  2
+#define LED_COUNT 24
+
+Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   d.setup();
+  strip.begin();
+  strip.show();
   Serial.println("setup");
 
 }
 
 void loop() {
+  for (int i=0; i<LED_COUNT; i++) {
+    strip.setPixelColor(i, 255, 0, 0);
+  }
+  strip.show();
+
   // If new command has been recieved
   if (Serial.available() > 0) {
     if (Serial.read() == 'c') { // c will be sent for a new cmd
