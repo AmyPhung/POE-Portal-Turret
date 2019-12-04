@@ -2,6 +2,7 @@
 
 import rospy
 import serial
+import time
 from geometry_msgs.msg import Twist
 from portal_turret.msg import Shooter
 from std_msgs.msg import Int16
@@ -20,6 +21,9 @@ class ArduinoComms:
         self.feed_sub = rospy.Subscriber("/cmd_feed", Int16, self.feedCB)
         self.update_rate = rospy.Rate(10)
 
+        self._max_send_rate = 10 # Hz
+        self._last_msg_time = time.time()
+
     def twistCB(self, msg):
         self.twist_cmd = msg
         self.sendCmds()
@@ -33,6 +37,12 @@ class ArduinoComms:
         self.sendCmds()
 
     def sendCmds(self):
+        # Prevent overloading the arduino with too many commands
+        if (time.time() - self._last_msg_time < 1./self._max_send_rate):
+            return
+
+        self._last_msg_time = time.time()
+
         self.connection.write('c') # Tell arduino new cmd is coming
         self.connection.write('f')
         self.connection.write(str(int(self.twist_cmd.linear.x)))
