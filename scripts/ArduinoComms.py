@@ -34,86 +34,39 @@ class ArduinoComms:
         self.feed_cmd = msg
 
     def sendCmds(self):
-        # Prevent overloading the arduino with too many commands
+          # Prevent overloading the arduino with too many commands
         if (time.time() - self._last_msg_time < 1./self._max_send_rate):
             return
 
         self._last_msg_time = time.time()
-
         # Encode command in string to send to arduino
         ser_cmd = "f" + str(int(self.twist_cmd.linear.x)) + \
-                  "a" + str(int(self.twist_cmd.angular.x)) + \
+                  "a" + str(int(self.twist_cmd.angular.z)) + \
                   "r" + str(int(self.shooter_cmd.r_cmd)) + \
                   "l" + str(int(self.shooter_cmd.l_cmd)) + \
                   "d" + str(int(self.feed_cmd.data)) + \
                   "e"
 
-
-        print("Lap-bot:")
-        print(ser_cmd)
-        # print(ser_cmd)
-        # self.connection.write('c')
-        # dealy
+        # Send string command
         self.connection.write(ser_cmd)
+        # time.sleep(0.1)
 
-        # self.connection.write('c') # Tell arduino new cmd is coming
-        # self.connection.write('f')
-        # self.connection.write(str(int(self.twist_cmd.linear.x)))
-        # self.connection.write('a')
-        # self.connection.write(str(int(self.twist_cmd.angular.z)))
-        # self.connection.write('r')
-        # self.connection.write(str(int(self.shooter_cmd.r_cmd)))
-        # self.connection.write('l')
-        # self.connection.write(str(int(self.shooter_cmd.l_cmd)))
-        # self.connection.write('d')
-        # self.connection.write(str(int(self.feed_cmd.data)))
-        # self.connection.write('e') # Tell arduino end of cmd
+        print("Lap-bot: ---------------------------------")
+        print("Current time: " + str(time.time()))
+        print("Sending: " + ser_cmd)
 
     def run(self):
         while not rospy.is_shutdown():
-            # if self.twist_cmd == None:
-            #     rospy.loginfo('MSG: No twist data published')
-            #     self.update_rate.sleep()
-            #     continue
-            # if self.shooter_cmd == None:
-            #     rospy.loginfo('MSG: No shooter data published')
-            #     self.update_rate.sleep()
-            #     continue
-
             self.sendCmds()
-            # time.sleep(0.1)
 
-
-            # print(str(int(self.twist_cmd.linear.x)))
-            # print(str(int(self.twist_cmd.angular.z)))
-            # print(str(int(self.shooter_cmd.r_cmd)))
-            # print(str(int(self.shooter_cmd.l_cmd)))
-            # print(str(int(self.feed_cmd.data)))
-
-            print(self.connection.in_waiting)
+            # For Debugging - prints out arduino output
+            # print(self.connection.in_waiting)
             msg = ""
             while self.connection.in_waiting > 0:
                 msg = msg + self.connection.readline()
-            # msg = self.connection.readline()
-            # msg = self.connection.readline()
-            # msg = self.connection.readline()
-            # msg = self.connection.readline()
-            # msg = self.connection.readline()
-            # msg = self.connection.readline()
-            print("Arduino:")
-            print(msg)
-            # msg = self.connection.readline()
-            # print(msg)
-            # msg = self.connection.readline()
-            # print(msg)
-            # msg = self.connection.readline()
-            # print(msg)
-            # msg = self.connection.readline()
-            # print(msg)
-            # msg = self.connection.readline()
-            # print(msg)
-            # msg = self.connection.readline()
-            # print(msg)
+
+            print("Arduino: ---------------------------------")
+            print(str(msg))
 
             self.update_rate.sleep()
 
