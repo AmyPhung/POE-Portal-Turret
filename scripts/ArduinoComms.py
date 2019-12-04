@@ -21,20 +21,17 @@ class ArduinoComms:
         self.feed_sub = rospy.Subscriber("/cmd_feed", Int16, self.feedCB)
         self.update_rate = rospy.Rate(10)
 
-        self._max_send_rate = 10 # Hz
+        self._max_send_rate = 30 # Hz
         self._last_msg_time = time.time()
 
     def twistCB(self, msg):
         self.twist_cmd = msg
-        self.sendCmds()
 
     def shooterCB(self, msg):
         self.shooter_cmd = msg
-        self.sendCmds()
 
     def feedCB(self, msg):
         self.feed_cmd = msg
-        self.sendCmds()
 
     def sendCmds(self):
         # Prevent overloading the arduino with too many commands
@@ -58,14 +55,15 @@ class ArduinoComms:
 
     def run(self):
         while not rospy.is_shutdown():
-            if self.twist_cmd == None:
-                rospy.loginfo('MSG: No twist data published')
-                self.update_rate.sleep()
-                continue
-            if self.shooter_cmd == None:
-                rospy.loginfo('MSG: No shooter data published')
-                self.update_rate.sleep()
-                continue
+            # if self.twist_cmd == None:
+            #     rospy.loginfo('MSG: No twist data published')
+            #     self.update_rate.sleep()
+            #     continue
+            # if self.shooter_cmd == None:
+            #     rospy.loginfo('MSG: No shooter data published')
+            #     self.update_rate.sleep()
+            #     continue
+            self.sendCmds()
             self.update_rate.sleep()
 
 if __name__ == "__main__":
