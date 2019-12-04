@@ -11,7 +11,7 @@ class DiffDriveBase{
 public:
   DiffDriveBase();
   void setup();
-  void run(robotCmd cmd);
+  void run(robotCmd *cmd);
 
 private:
   Adafruit_MotorShield shield = Adafruit_MotorShield();
@@ -20,7 +20,7 @@ private:
   // Adafruit_DCMotor *LShooter = shield.getMotor(3);
   // Adafruit_DCMotor *RShooter = shield.getMotor(4);
   int l_shooter_pin = 5;
-  int r_shooter_pin = 6;  
+  int r_shooter_pin = 6;
   Servo feedServo;
 };
 
