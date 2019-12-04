@@ -107,11 +107,16 @@ def computeTeleopCommand(joy_cmd):
     if len(joy_cmd.axes) == 0:
         return twist_cmd, shooter_cmd, feed_cmd
 
+    # Bug Patch - joystick right trigger initializes to 0 instead of 1
+    shooter_val = joy_cmd.axes[5]
+    if shooter_val == 0:
+        shooter_val = 1
+
     twist_cmd.linear.x = int(joy_cmd.axes[1] * 100)
     twist_cmd.angular.z = int(joy_cmd.axes[0] * 100)
 
-    shooter_cmd.r_cmd = int(reMap(joy_cmd.axes[5], -1, 1, 100, 0))
-    shooter_cmd.l_cmd = int(reMap(joy_cmd.axes[5], -1, 1, 100, 0))
+    shooter_cmd.r_cmd = int(reMap(shooter_val, -1, 1, 100, 0))
+    shooter_cmd.l_cmd = int(reMap(shooter_val, -1, 1, 100, 0))
 
     feed_cmd.data = 100*joy_cmd.buttons[5]
 
