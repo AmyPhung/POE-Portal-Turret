@@ -4,19 +4,24 @@
 #include "msgs.h"
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
+#include <Servo.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
 class DiffDriveBase{
 public:
   DiffDriveBase();
-  void run(robotCmd cmd);
+  void setup();
+  void run(robotCmd *cmd);
 
 private:
   Adafruit_MotorShield shield = Adafruit_MotorShield();
-  Adafruit_DCMotor *LMotor = shield.getMotor(1);
-  Adafruit_DCMotor *RMotor = shield.getMotor(2);
-  Adafruit_DCMotor *LShooter = shield.getMotor(3);
-  Adafruit_DCMotor *RShooter = shield.getMotor(4);
+  Adafruit_DCMotor *LMotor = shield.getMotor(2);
+  Adafruit_DCMotor *RMotor = shield.getMotor(1);
+  // Adafruit_DCMotor *LShooter = shield.getMotor(3);
+  // Adafruit_DCMotor *RShooter = shield.getMotor(4);
+  int l_shooter_pin = 5;
+  int r_shooter_pin = 6;
+  Servo feedServo;
 };
 
 #endif

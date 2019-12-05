@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="portal_turret" type="ArduinoComms.py"
+        name="arduino_comms" output="screen"/>
+  <node pkg="portal_turret" type="StateController.py"
+        name="state_controller" output="screen"/>
+</launch>
