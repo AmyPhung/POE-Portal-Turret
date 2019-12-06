@@ -24,7 +24,7 @@ void setup() {
 void loop() {
   // Color neopixel ring light
   for (int i=0; i<LED_COUNT; i++) {
-    strip.setPixelColor(i, 255, 0, 0);
+    strip.setPixelColor(i, 100, 0, 0); // Max is 255
   }
   strip.show();
 
