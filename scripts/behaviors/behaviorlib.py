@@ -20,7 +20,7 @@ def computeForwardCommand():
     twist_cmd = Twist()
     shooter_cmd = None # Will retain previous value
     feed_cmd = None
-    twist_cmd.linear.x = 40
+    twist_cmd.linear.x = 100
     twist_cmd.angular.z = 0
     return twist_cmd, shooter_cmd, feed_cmd
 
@@ -28,7 +28,7 @@ def computeBackwardCommand():
     twist_cmd = Twist()
     shooter_cmd = None # Will retain previous value
     feed_cmd = None
-    twist_cmd.linear.x = -40
+    twist_cmd.linear.x = -100
     twist_cmd.angular.z = 0
     return twist_cmd, shooter_cmd, feed_cmd
 
@@ -37,7 +37,7 @@ def computeLeftCommand():
     shooter_cmd = None # Will retain previous value
     feed_cmd = None
     twist_cmd.linear.x = 0
-    twist_cmd.angular.z = 40
+    twist_cmd.angular.z = 100
     return twist_cmd, shooter_cmd, feed_cmd
 
 def computeRightCommand():
@@ -45,7 +45,7 @@ def computeRightCommand():
     shooter_cmd = None # Will retain previous value
     feed_cmd = None
     twist_cmd.linear.x = 0
-    twist_cmd.angular.z = -40
+    twist_cmd.angular.z = -100
     return twist_cmd, shooter_cmd, feed_cmd
 
 def computeShootOnCommand():

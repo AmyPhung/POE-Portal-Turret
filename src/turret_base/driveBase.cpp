@@ -1,5 +1,8 @@
 #include "driveBase.h"
-
+#define MAX_SPEED 200
+#define MAX_TURN 130
+#define RIGHT_OFFSET 1   // To account for different speeds
+#define LEFT_OFFSET 0.7
 
 DiffDriveBase::DiffDriveBase(){
 
@@ -24,28 +27,28 @@ void DiffDriveBase::run(robotCmd *cmd){
   if (cmd->feed > 100) cmd->feed = 100;
   if (cmd->feed < -100) cmd->feed = -100;
 
-  int forward = map(cmd->f_vel, -100, 100, -255, 255);
-  int turn = map(cmd->a_vel, -100, 100, -255, 255);    // Left is positive, RH rule
+  int forward = map(cmd->f_vel, -100, 100, -MAX_SPEED, MAX_SPEED);
+  int turn = map(cmd->a_vel, -100, 100, -MAX_TURN, MAX_TURN);    // Left is positive, RH rule
   int l_shoot_speed = map(cmd->l_shooter, 0, 100, 0, 255);
   int r_shoot_speed = map(cmd->r_shooter, 0, 100, 0, 255);
   int feed = map(cmd->feed, -100, 100, 0, 168);
 
-  int Rspeed = forward + turn; // Speed goes from 0 to 255
-  int Lspeed = forward - turn;
+  int Rspeed = RIGHT_OFFSET*(forward + turn); // Speed goes from 0 to 255
+  int Lspeed = LEFT_OFFSET*(forward - turn);
 
   if (Rspeed < 0) {
     RMotor->setSpeed(-Rspeed);
-    RMotor->run(BACKWARD);
+    RMotor->run(BACKWARD); 
   } else {
     RMotor->setSpeed(Rspeed);
-    RMotor->run(FORWARD);
+    RMotor->run(FORWARD); 
   }
   if (Lspeed < 0) {
     LMotor->setSpeed(-Lspeed);
-    LMotor->run(BACKWARD);
+    LMotor->run(FORWARD); // Actually backward
   } else {
     LMotor->setSpeed(Lspeed);
-    LMotor->run(FORWARD);
+    LMotor->run(BACKWARD); // Actually forward
   }
 
   analogWrite(l_shooter_pin, l_shoot_speed); // Can go from 0 to 255
