@@ -8,7 +8,7 @@ import pyaudio
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from mpu6050 import mpu6050
 
-Z_ACCEL_THRESHOLD = 7
+X_ACCEL_THRESHOLD = 7
 p = pyaudio.PyAudio()
 state = 'activate'
 
@@ -63,6 +63,7 @@ if __name__ == "__main__":
     state = 'idle'
     anl = SentimentIntensityAnalyzer()
 
+    '''
     r = sr.Recognizer()
     m = sr.Microphone()
     with m as source:
@@ -71,11 +72,12 @@ if __name__ == "__main__":
     # start listening in the background
     stop_listening = r.listen_in_background(m, callback)
     # `stop_listening` is a callable function that stops background listening
+    '''
 
     while True:
         accel_data = imu.get_accel_data()
 
-        if accel_data['z'] < Z_ACCEL_THRESHOLD:
+        if accel_data['x'] < X_ACCEL_THRESHOLD:
             state = 'falling'
             speak()
         else:
